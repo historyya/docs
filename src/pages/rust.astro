@@ -1,0 +1,69 @@
+---
+import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
+import AnchorHeading from "@astrojs/starlight/components/AnchorHeading.astro";
+import type { Props as StarlightPageProps } from "@astrojs/starlight/components/StarlightPage.astro";
+import { getCollection } from "astro:content";
+
+const rustDocs = await getCollection("docs", (entry) => {
+  return entry.id.startsWith("rust/");
+});
+
+const docsByDirectory = rustDocs.reduce<Record<string, typeof rustDocs>>(
+  (acc, doc) => {
+    const pathParts = doc.id.split("/");
+    const directory = pathParts.length > 2 ? pathParts[1] : "general";
+
+    if (!acc[directory]) {
+      acc[directory] = [];
+    }
+
+    acc[directory].push(doc);
+    return acc;
+  },
+  {}
+);
+
+function sortDocs(a: (typeof rustDocs)[number], b: (typeof rustDocs)[number]) {
+  const orderA = a.data.sidebar?.order || 999;
+  const orderB = b.data.sidebar?.order || 999;
+  if (orderA !== orderB) return orderA - orderB;
+
+  return a.data.title.localeCompare(b.data.title);
+}
+
+const sidebar: StarlightPageProps["sidebar"] = [];
+
+if (docsByDirectory.general) {
+  docsByDirectory.general.sort(sortDocs).forEach((doc) => {
+    sidebar.push({
+      label: doc.data.title,
+      link: `/${doc.id.replace(/\.(md|mdx)$/, "")}/`,
+    });
+  });
+}
+
+Object.entries(docsByDirectory)
+  .filter(([directory]) => directory !== "general")
+  .sort(([a], [b]) => a.localeCompare(b))
+  .forEach(([directory, docs]) => {
+    sidebar.push({
+      label: directory.charAt(0).toUpperCase() + directory.slice(1),
+      collapsed: false, // 默认展开，可以改为 true 使其默认折叠
+      items: docs.sort(sortDocs).map((doc) => ({
+        label: doc.data.title,
+        link: `/docs/${doc.id.replace(/\.(md|mdx)$/, "")}/`,
+      })),
+    });
+  });
+
+const currentPath = Astro.url.pathname;
+---
+
+<StarlightPage frontmatter={{ title: "Rust" }} sidebar={sidebar}>
+  <p>这是一个有自定义组件的自定义页面：</p>
+
+  <AnchorHeading level="2" id="learn-more">了解更多</AnchorHeading>
+  <p>
+    <a href="https://starlight.astro.build/">在 Starlight 文档中阅读更多</a>
+  </p>
+</StarlightPage>

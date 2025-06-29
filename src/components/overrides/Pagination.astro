@@ -1,0 +1,41 @@
+---
+import { Icon } from '@astrojs/starlight/components';
+
+const { dir, pagination } = Astro.locals.starlightRoute;
+const { prev, next } = pagination;
+const isRtl = dir === 'rtl';
+---
+
+<div class="grid w-full gap-4 border-t border-gray-100 py-4 md:grid-cols-2 dark:border-gray-800" dir={dir}>
+  {
+    prev ? (
+      <a href={prev.href} rel="prev" class="flex flex-col gap-2 rounded-lg px-2 py-3 no-underline transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-900">
+        <span class="pl-2 text-sm text-gray-600 dark:text-gray-300">{Astro.locals.t("page.previousLink")}</span>
+        <span class="flex items-start gap-2">
+          <Icon
+            name={isRtl ? "right-arrow" : "left-arrow"}
+            size="24px"
+            class="mt-1.5 shrink-0 dark:text-white"
+          />
+          <span class="mt-2 block text-base font-medium leading-tight text-gray-900 dark:text-white">{prev.label}</span>
+        </span>
+      </a>
+    ) : <div aria-hidden="true" />
+  }
+  
+  {
+    next ? (
+      <a href={next.href} rel="next" class="flex flex-col items-end gap-2 rounded-lg px-2 py-3 text-right no-underline transition-colors duration-200 hover:bg-gray-50 dark:hover:bg-gray-900">
+        <span class="pr-2 text-sm text-gray-600 dark:text-gray-300">{Astro.locals.t("page.nextLink")}</span>
+        <span class="flex items-start gap-2">
+          <span class="mt-2 block text-base font-medium leading-tight text-gray-900 dark:text-white">{next.label}</span>
+          <Icon
+            name={isRtl ? "left-arrow" : "right-arrow"}
+            size="24px"
+            class="mt-1.5 shrink-0 dark:text-white"
+          />
+        </span>
+      </a>
+    ) : <div aria-hidden="true" />
+  }
+</div>
