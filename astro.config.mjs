@@ -43,6 +43,10 @@ export default defineConfig({
           label: "Java",
           autogenerate: { directory: "java" },
         },
+        {
+          label: "Nginx",
+          autogenerate: { directory: "nginx" },
+        },
       ],
       customCss: ["./src/styles/global.css"],
       components: {
