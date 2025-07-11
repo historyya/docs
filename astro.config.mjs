@@ -35,6 +35,14 @@ export default defineConfig({
           label: "React",
           autogenerate: { directory: "react" },
         },
+        {
+          label: "Kotlin",
+          autogenerate: { directory: "kotlin" },
+        },
+        {
+          label: "Java",
+          autogenerate: { directory: "java" },
+        },
       ],
       customCss: ["./src/styles/global.css"],
       components: {
