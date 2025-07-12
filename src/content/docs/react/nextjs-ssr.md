@@ -2,7 +2,7 @@
 title: Next.js CSR vs SSR vs SSG
 description: Next.js CSR vs SSR vs SSG
 sidebar:
-  order: 1
+  order: 100
 ---
 
 ## CSR

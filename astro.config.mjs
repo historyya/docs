@@ -52,7 +52,7 @@ export default defineConfig({
       components: {
         Pagination: "./src/components/overrides/Pagination.astro",
       },
-      favicon: "./src/assets/favicon.svg",
+      favicon: "/favicon.svg",
       lastUpdated: true,
       expressiveCode: {
         styleOverrides: { borderRadius: "0.5rem" },
