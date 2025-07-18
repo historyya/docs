@@ -47,6 +47,14 @@ export default defineConfig({
           label: "Nginx",
           autogenerate: { directory: "nginx" },
         },
+        {
+          label: "Podman",
+          autogenerate: { directory: "podman" },
+        },
+        {
+          label: "Nodejs",
+          autogenerate: { directory: "nodejs" },
+        },
       ],
       customCss: ["./src/styles/global.css"],
       components: {
