@@ -28,6 +28,10 @@ export default defineConfig({
           ],
         },
         {
+          label: "Nodejs",
+          autogenerate: { directory: "nodejs" },
+        },
+        {
           label: "React",
           autogenerate: { directory: "react" },
         },
@@ -44,6 +48,10 @@ export default defineConfig({
           autogenerate: { directory: "rust" },
         },
         {
+          label: "Linux",
+          autogenerate: { directory: "linux" },
+        },
+        {
           label: "Nginx",
           autogenerate: { directory: "nginx" },
         },
@@ -54,14 +62,6 @@ export default defineConfig({
         {
           label: "Podman",
           autogenerate: { directory: "podman" },
-        },
-        {
-          label: "Nodejs",
-          autogenerate: { directory: "nodejs" },
-        },
-        {
-          label: "Linux",
-          autogenerate: { directory: "linux" },
         },
       ],
       customCss: ["./src/styles/global.css"],
