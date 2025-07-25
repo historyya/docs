@@ -63,6 +63,14 @@ export default defineConfig({
           label: "Podman",
           autogenerate: { directory: "podman" },
         },
+        {
+          label: "MySQL",
+          autogenerate: { directory: "mysql" },
+        },
+        {
+          label: "Redis",
+          autogenerate: { directory: "redis" },
+        },
       ],
       customCss: ["./src/styles/global.css"],
       components: {
