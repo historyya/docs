@@ -7,13 +7,13 @@ sidebar:
 
 ## CSR
 
-Client-Side Rendering
+Client Side Rendering
 
 比如 SPA 应用
 
 ## SSR
 
-Server-Side Rendering
+Server Side Rendering
 
 ### 优点
 
@@ -58,7 +58,12 @@ fetch("https://api.github.com/users")
 
 ## SSG
 
-Static-Side Rendering (use generateStaticParams())
+Static Side Generation (use generateStaticParams())
+
+1. [x] Better Performance
+2. [x] Server has less load
+3. [x] Instant page load
+4. [ ] Not suitable for Dynamic Content
 
 ## ISR
 

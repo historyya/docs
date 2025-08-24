@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "docs",
-  "compatibility_date": "2025-07-11",
+  "compatibility_date": "2025-08-10",
   "assets": {
     "directory": "./dist"
   }
