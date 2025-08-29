@@ -40,12 +40,8 @@ export default defineConfig({
                     autogenerate: {directory: "react"},
                 },
                 {
-                    label: "Kotlin",
-                    autogenerate: {directory: "kotlin"},
-                },
-                {
-                    label: "Java",
-                    autogenerate: {directory: "java"},
+                    label: "Go",
+                    autogenerate: {directory: "go"},
                 },
                 {
                     label: "Rust",
@@ -74,6 +70,14 @@ export default defineConfig({
                 {
                     label: "Redis",
                     autogenerate: {directory: "redis"},
+                },
+                {
+                    label: "Kotlin",
+                    autogenerate: {directory: "kotlin"},
+                },
+                {
+                    label: "Java",
+                    autogenerate: {directory: "java"},
                 },
                 {
                     label: "Frontend",
