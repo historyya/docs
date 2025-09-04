@@ -379,8 +379,10 @@ func main() {
 package main
 
 import (
-	"fmt"
+	"archive/zip"
+	"io"
 	"os"
+	"path/filepath"
 	"time"
 
 	"go.uber.org/zap"
@@ -393,76 +395,195 @@ const (
 	colorGreen  = "\033[32m"
 	colorYellow = "\033[33m"
 	colorReset  = "\033[0m"
+	logRetain   = 7 // 保留最近 7 天日志
 )
 
-// 支持时间分片和level分片
+// 自定义 Encoder，支持时间分片和 level 分片
 type logEncoder struct {
 	zapcore.Encoder
+	fileEncoder zapcore.Encoder // 文件输出编码器
+
 	file        *os.File
 	errFile     *os.File
 	currentDate string
+	logDir      string
 }
 
-func myEncodeLevel(level zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
+// 控制台彩色输出
+func consoleEncodeLevel(level zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
 	switch level {
 	case zapcore.InfoLevel:
 		enc.AppendString(colorGreen + "INFO" + colorReset)
-		return
 	case zapcore.WarnLevel:
 		enc.AppendString(colorYellow + "WARN" + colorReset)
-		return
 	case zapcore.ErrorLevel, zapcore.DPanicLevel, zapcore.PanicLevel, zapcore.FatalLevel:
 		enc.AppendString(colorRed + "ERROR" + colorReset)
-		return
 	default:
 		enc.AppendString(level.String())
 	}
 }
 
+// 文件纯文本输出
+func fileEncodeLevel(level zapcore.Level, enc zapcore.PrimitiveArrayEncoder) {
+	enc.AppendString(level.CapitalString())
+}
+
+// 压缩目录为 zip 文件
+func compressDir(srcDir, dstZip string) error {
+	zipFile, err := os.Create(dstZip)
+	if err != nil {
+		return err
+	}
+	defer zipFile.Close()
+
+	archive := zip.NewWriter(zipFile)
+	defer archive.Close()
+
+	err = filepath.Walk(srcDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+
+		relPath, err := filepath.Rel(filepath.Dir(srcDir), path)
+		if err != nil {
+			return err
+		}
+
+		writer, err := archive.Create(relPath)
+		if err != nil {
+			return err
+		}
+
+		file, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer file.Close()
+
+		_, err = io.Copy(writer, file)
+		return err
+	})
+
+	return err
+}
+
+// 清理旧日志
+func cleanupOldLogs(baseDir string, retainDays int) {
+	files, err := os.ReadDir(baseDir)
+	if err != nil {
+		return
+	}
+	cutoff := time.Now().AddDate(0, 0, -retainDays)
+
+	for _, f := range files {
+		if f.IsDir() {
+			// 判断文件夹名是否是日期
+			if t, err := time.Parse("2006-01-02", f.Name()); err == nil {
+				if t.Before(cutoff) {
+					oldDir := filepath.Join(baseDir, f.Name())
+					zipPath := oldDir + ".zip"
+
+					// 压缩
+					if err := compressDir(oldDir, zipPath); err == nil {
+						// 删除原目录
+						_ = os.RemoveAll(oldDir)
+					}
+				}
+			}
+		}
+	}
+}
+
 func (e *logEncoder) EncodeEntry(entry zapcore.Entry, fields []zapcore.Field) (*buffer.Buffer, error) {
-	// 先调用原始的Encoder方法生成日志行
-	buf, err := e.Encoder.EncodeEntry(entry, fields)
+	// 控制台输出
+	consoleBuf, err := e.Encoder.EncodeEntry(entry, fields)
 	if err != nil {
 		return nil, err
 	}
+
+	// 文件输出
+	fileBuf, _ := e.fileEncoder.EncodeEntry(entry, fields)
+
 	// 日志前缀
-	data := buf.String()
-	buf.Reset()
-	buf.AppendString("[MyApp] " + data)
-	data = buf.String()
+	data := "[MyApp] " + fileBuf.String()
+
 	// 时间分片
 	now := time.Now().Format("2006-01-02")
+	logDir := filepath.Join(e.logDir, now)
+
 	if e.currentDate != now {
-		os.MkdirAll(fmt.Sprintf("logs/%s", now), 0666)
-		// 时间不同，先创建目录
-		name := fmt.Sprintf("logs/%s/out.log", now)
-		file, _ := os.OpenFile(name, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
+		if err := os.MkdirAll(logDir, 0755); err != nil {
+			return nil, err
+		}
+		// 关闭旧文件
+		if e.file != nil {
+			_ = e.file.Close()
+		}
+		if e.errFile != nil {
+			_ = e.errFile.Close()
+		}
+
+		outName := filepath.Join(logDir, "out.log")
+		file, err := os.OpenFile(outName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+		if err != nil {
+			return nil, err
+		}
 		e.file = file
 		e.currentDate = now
+		e.errFile = nil
+
+		// 清理旧日志
+		go cleanupOldLogs(e.logDir, logRetain)
 	}
-	// level分片
-	switch entry.Level {
-	case zapcore.ErrorLevel, zapcore.PanicLevel, zapcore.FatalLevel:
+
+	// 写 out.log（所有日志都写）
+	if _, err := e.file.WriteString(data); err != nil {
+		return nil, err
+	}
+
+	// 写 err.log（仅错误级别）
+	if entry.Level >= zapcore.ErrorLevel {
 		if e.errFile == nil {
-			name := fmt.Sprintf("logs/%s/err.log", now)
-			file, _ := os.OpenFile(name, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0666)
+			errName := filepath.Join(logDir, "err.log")
+			file, err := os.OpenFile(errName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+			if err != nil {
+				return nil, err
+			}
 			e.errFile = file
 		}
-		e.errFile.WriteString(buf.String())
+		if _, err := e.errFile.WriteString(data); err != nil {
+			return nil, err
+		}
 	}
-	if e.currentDate == now {
-		e.file.WriteString(data)
-	}
-	return buf, nil
+
+	return consoleBuf, nil
 }
 
 func InitLogger() *zap.Logger {
-	config := zap.NewDevelopmentConfig()
-	config.EncoderConfig.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05")
-	config.EncoderConfig.EncodeLevel = myEncodeLevel
-	encoder := &logEncoder{
-		Encoder: zapcore.NewConsoleEncoder(config.EncoderConfig),
+	logDir := os.Getenv("LOG_DIR")
+	if logDir == "" {
+		logDir = "logs"
 	}
+
+	// 控制台配置
+	consoleCfg := zap.NewDevelopmentEncoderConfig()
+	consoleCfg.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05")
+	consoleCfg.EncodeLevel = consoleEncodeLevel
+
+	// 文件配置
+	fileCfg := zap.NewDevelopmentEncoderConfig()
+	fileCfg.EncodeTime = zapcore.TimeEncoderOfLayout("2006-01-02 15:04:05")
+	fileCfg.EncodeLevel = fileEncodeLevel
+
+	encoder := &logEncoder{
+		Encoder:     zapcore.NewConsoleEncoder(consoleCfg),
+		fileEncoder: zapcore.NewConsoleEncoder(fileCfg),
+		logDir:      logDir,
+	}
+
 	core := zapcore.NewCore(encoder, zapcore.AddSync(os.Stdout), zapcore.InfoLevel)
 	logger := zap.New(core, zap.AddCaller())
 	zap.ReplaceGlobals(logger)
@@ -471,6 +592,8 @@ func InitLogger() *zap.Logger {
 
 func main() {
 	logger := InitLogger()
+	defer logger.Sync()
+
 	logger.Info("this is info log")
 	logger.Warn("this is warn log")
 	logger.Error("this is error log 1")

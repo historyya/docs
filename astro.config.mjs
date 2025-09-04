@@ -29,63 +29,63 @@ export default defineConfig({
                 },
                 {
                     label: "Nodejs",
-                    autogenerate: {directory: "nodejs"},
+                    autogenerate: {directory: "nodejs",collapse: true},
                 },
                 {
                     label: "JavaScript",
-                    autogenerate: {directory: "javascript"},
+                    autogenerate: {directory: "javascript",collapse: true},
                 },
                 {
                     label: "React",
-                    autogenerate: {directory: "react"},
+                    autogenerate: {directory: "react",collapse: true},
                 },
                 {
                     label: "Go",
-                    autogenerate: {directory: "go"},
+                    autogenerate: {directory: "go",collapse: true},
                 },
                 {
                     label: "Rust",
-                    autogenerate: {directory: "rust"},
+                    autogenerate: {directory: "rust",collapse: true},
                 },
                 {
                     label: "Linux",
-                    autogenerate: {directory: "linux"},
+                    autogenerate: {directory: "linux",collapse: true},
                 },
                 {
                     label: "Nginx",
-                    autogenerate: {directory: "nginx"},
+                    autogenerate: {directory: "nginx",collapse: true},
                 },
                 {
                     label: "Docker",
-                    autogenerate: {directory: "docker"},
+                    autogenerate: {directory: "docker",collapse: true},
                 },
                 {
                     label: "Podman",
-                    autogenerate: {directory: "podman"},
+                    autogenerate: {directory: "podman",collapse: true},
                 },
                 {
                     label: "MySQL",
-                    autogenerate: {directory: "mysql"},
+                    autogenerate: {directory: "mysql",collapse: true},
                 },
                 {
                     label: "Redis",
-                    autogenerate: {directory: "redis"},
+                    autogenerate: {directory: "redis",collapse: true},
                 },
                 {
                     label: "Kotlin",
-                    autogenerate: {directory: "kotlin"},
+                    autogenerate: {directory: "kotlin",collapse: true},
                 },
                 {
                     label: "Java",
-                    autogenerate: {directory: "java"},
+                    autogenerate: {directory: "java",collapse: true},
                 },
                 {
                     label: "Frontend",
-                    autogenerate: {directory: "frontend"},
+                    autogenerate: {directory: "frontend",collapse: true},
                 },
                 {
                     label: "Backend",
-                    autogenerate: {directory: "backend"},
+                    autogenerate: {directory: "backend",collapse: true},
                 }
             ],
             customCss: ["./src/styles/global.css"],
