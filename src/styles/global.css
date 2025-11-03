@@ -1,12 +1,16 @@
 @import "tailwindcss";
 
 .hero-html {
-  @apply flex justify-center text-[min(10rem,calc(5rem+6vw))] leading-[min(10rem,calc(5rem+6vw))] z-[-1];
+    @apply flex justify-center text-[min(10rem,calc(5rem+6vw))] leading-[min(10rem,calc(5rem+6vw))] z-[-1];
 }
 
 [data-has-hero] header {
-  border-bottom: 1px solid transparent;
-  background-color: transparent;
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+    border-bottom: 1px solid transparent;
+    background-color: transparent;
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+}
+
+.sl-markdown-content li {
+    @apply list-disc ml-6;
 }
