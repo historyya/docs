@@ -1,4 +1,9 @@
 @import "tailwindcss";
+@import "katex/dist/katex.min.css";
+
+:root {
+    --sl-content-gap-y: 1rem;
+}
 
 .hero-html {
     @apply flex justify-center text-[min(10rem,calc(5rem+6vw))] leading-[min(10rem,calc(5rem+6vw))] z-[-1];
@@ -11,6 +16,25 @@
     backdrop-filter: blur(16px);
 }
 
-.sl-markdown-content li {
-    @apply list-disc ml-6;
+.sl-markdown-content {
+    @apply text-gray-800 dark:text-gray-200 leading-relaxed;
+
+    ul {
+        @apply list-disc pl-6 space-y-2 my-4
+        marker:text-blue-500 dark:marker:text-blue-400;
+    }
+
+    ol {
+        @apply list-decimal pl-6 space-y-2 my-4
+        marker:text-blue-600 marker:font-semibold
+        dark:marker:text-blue-400;
+    }
+
+    li {
+        @apply pl-2;
+
+        > ul, > ol {
+            @apply my-2;
+        }
+    }
 }

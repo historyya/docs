@@ -2,6 +2,8 @@
 import {defineConfig} from "astro/config";
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 
 // https://astro.build/config
 export default defineConfig({
@@ -101,6 +103,11 @@ export default defineConfig({
                     label: "Backend",
                     autogenerate: {directory: "backend"},
                     collapsed: true
+                },
+                {
+                    label: "软考中级",
+                    autogenerate: {directory: "ruankao"},
+                    collapsed: true
                 }
             ],
             customCss: ["./src/styles/global.css"],
@@ -116,5 +123,9 @@ export default defineConfig({
     ],
     vite: {
         plugins: [tailwindcss()],
+    },
+    markdown: {
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex],
     },
 });
