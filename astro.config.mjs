@@ -95,6 +95,11 @@ export default defineConfig({
                     collapsed: true
                 },
                 {
+                    label: "Git",
+                    autogenerate: {directory: "git"},
+                    collapsed: true
+                },
+                {
                     label: "Frontend",
                     autogenerate: {directory: "frontend"},
                     collapsed: true
