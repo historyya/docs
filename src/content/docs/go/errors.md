@@ -2,7 +2,7 @@
 title: 错误处理
 description: 错误处理
 sidebar:
-  order: 6
+  order: 32
 ---
 
 ## 错误处理
@@ -22,10 +22,31 @@ type error interface {
 - 资源清理（关闭文件，释放锁，数据库关闭）
 
 ```go
-// 延迟执行，后进先出
-defer fun(){
-	// 延迟执行的代码
-}()
+package main
+
+/*
+	defer 会在return之后执行，defer的执行顺序是先进后出（类似栈）
+*/
+
+import "fmt"
+
+func main() {
+	defer func() {
+		fmt.Println("111")
+	}()
+
+	defer func() {
+		fmt.Println("222")
+	}()
+
+	defer func() {
+		fmt.Println("333")
+	}()
+
+	// 333
+	// 222
+	// 111
+}
 ```
 
 ### panic/recover
