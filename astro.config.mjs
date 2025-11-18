@@ -55,13 +55,18 @@ export default defineConfig({
                     collapsed: true
                 },
                 {
-                    label: "Linux",
-                    autogenerate: {directory: "linux"},
+                    label: "Kotlin",
+                    autogenerate: {directory: "kotlin"},
                     collapsed: true
                 },
                 {
-                    label: "Nginx",
-                    autogenerate: {directory: "nginx"},
+                    label: "Java",
+                    autogenerate: {directory: "java"},
+                    collapsed: true
+                },
+                {
+                    label: "Linux",
+                    autogenerate: {directory: "linux"},
                     collapsed: true
                 },
                 {
@@ -85,13 +90,8 @@ export default defineConfig({
                     collapsed: true
                 },
                 {
-                    label: "Kotlin",
-                    autogenerate: {directory: "kotlin"},
-                    collapsed: true
-                },
-                {
-                    label: "Java",
-                    autogenerate: {directory: "java"},
+                    label: "Nginx",
+                    autogenerate: {directory: "nginx"},
                     collapsed: true
                 },
                 {
