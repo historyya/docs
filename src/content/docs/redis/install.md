@@ -49,7 +49,17 @@ $ redis-server -v
 
 $ redis-server /myredis/redis.conf
 
+# 查看redis进程
 $ ps -ef | grep redis
+
+# 查看redis服务是否在运行
+$ lsof -i:6379
+
+# 强制关闭redis服务
+$ kill -9 <redis进程号>
+
+# 性能测试：测试100个并发连接数，100000个请求数
+$ redis-benchmark -h 127.0.0.1 -p 6379 -a password123 -c 100 -n 100000
 
 $ redis-cli
 ping
@@ -59,6 +69,10 @@ auth password123
 config get requirepass  #获取redis密码
 
 config set requirepass "123456"  #设置redis密码
+
+config get port  # 获取redis端口号
+
+config get dir  # 获取redis数据目录
 ```
 
 #### CentOS 7
@@ -96,6 +110,7 @@ protected-mode no  #保护模式。修改成no
 daemonize yes  #以守护进程方式运行。修改成yes
 requirepass password123 # 设置密码
 
+# 启动redis
 $ redis-server /usr/local/bin/redis-config/redis.conf
 
 $ ps -ef | grep redis | grep -v grep
@@ -157,4 +172,14 @@ dbsize  #查看当前数据库中key的数量
 flushdb  #清空当前数据库
 
 flushall  #清空所有数据库
+
+shutdown  #关闭redis服务
+```
+
+### 常见问题
+
+1. 解决中文显示乱码
+
+```bash
+redis-cli --raw
 ```

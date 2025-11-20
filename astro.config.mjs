@@ -70,6 +70,11 @@ export default defineConfig({
                     collapsed: true
                 },
                 {
+                    label: "Nginx",
+                    autogenerate: {directory: "nginx"},
+                    collapsed: true
+                },
+                {
                     label: "Docker",
                     autogenerate: {directory: "docker"},
                     collapsed: true
@@ -87,6 +92,11 @@ export default defineConfig({
                 {
                     label: "Redis",
                     autogenerate: {directory: "redis"},
+                    collapsed: true
+                },
+                {
+                    label: "MongoDB",
+                    autogenerate: {directory: "mongodb"},
                     collapsed: true
                 },
                 {
