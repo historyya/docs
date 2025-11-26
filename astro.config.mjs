@@ -1,9 +1,11 @@
 import {defineConfig} from "astro/config";
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
+import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
+    site: 'https://docs.qing1i.workers.dev/',
     integrations: [
         starlight({
             title: "Docs",
@@ -136,5 +138,7 @@ export default defineConfig({
     vite: {
         plugins: [tailwindcss()],
     },
-    markdown: {},
+    adapter: cloudflare({
+        imageService: 'cloudflare'
+    })
 });
