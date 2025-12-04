@@ -49,16 +49,16 @@ $ redis-server -v
 
 $ redis-server /myredis/redis.conf
 
-# 查看redis进程
+  # 查看redis进程
 $ ps -ef | grep redis
 
-# 查看redis服务是否在运行
+  # 查看redis服务是否在运行
 $ lsof -i:6379
 
-# 强制关闭redis服务
+  # 强制关闭redis服务
 $ kill -9 <redis进程号>
 
-# 性能测试：测试100个并发连接数，100000个请求数
+  # 性能测试：测试100个并发连接数，100000个请求数
 $ redis-benchmark -h 127.0.0.1 -p 6379 -a password123 -c 100 -n 100000
 
 $ redis-cli
@@ -80,58 +80,58 @@ config get dir  # 获取redis数据目录
 ```yaml
 $ cd /opt
 
-$ wget https://download.redis.io/redis-stable.tar.gz
+  $ wget https://download.redis.io/redis-stable.tar.gz
 
-$ tar xzf redis-stable.tar.gz
+  $ tar xzf redis-stable.tar.gz
 
-$ cd redis-stable
+  $ cd redis-stable
 
-$ yum install gcc-c++
+  $ yum install gcc-c++
 
-$ make
+  $ make
 
-$ make install
+  $ make install
 
-$ cd /usr/local/bin
+  $ cd /usr/local/bin
 
-$ ls
-redis-cli        redis-server
+  $ ls
+  redis-cli        redis-server
 
-$ mkdir redis-config
+  $ mkdir redis-config
 
-$ cp /opt/redis-stable/redis.conf redis-config/
+  $ cp /opt/redis-stable/redis.conf redis-config/
 
-$ cd redis-config
+  $ cd redis-config
 
-$ vim redis.conf
-# 修改以下配置内容
-#bind 127.0.0.1  #IP访问限制。注释掉，或者修改为0.0.0.0允许所有IP访问
-protected-mode no  #保护模式。修改成no
-daemonize yes  #以守护进程方式运行。修改成yes
-requirepass password123 # 设置密码
+  $ vim redis.conf
+  # 修改以下配置内容
+  #bind 127.0.0.1  #IP访问限制。注释掉，或者修改为0.0.0.0允许所有IP访问
+  protected-mode no  #保护模式。修改成no
+  daemonize yes  #以守护进程方式运行。修改成yes
+  requirepass password123 # 设置密码
 
-# 启动redis
-$ redis-server /usr/local/bin/redis-config/redis.conf
+  # 启动redis
+  $ redis-server /usr/local/bin/redis-config/redis.conf
 
-$ ps -ef | grep redis | grep -v grep
+  $ ps -ef | grep redis | grep -v grep
 
-$ redis-cli -h 127.0.0.1 -p 6379 -a 
-ping #测试
-PONG
-set name '张三'
-get name
-"张三"
-keys *  #查看数据库中所有的key
-flushdb #清空当前数据库
-flushall #清空所有数据库
-quit # 退出，或exit
-SHUTDOWN # 关闭redis服务
+  $ redis-cli -h 127.0.0.1 -p 6379 -a
+  ping #测试
+  PONG
+  set name '张三'
+  get name
+  "张三"
+  keys *  #查看数据库中所有的key
+  flushdb #清空当前数据库
+  flushall #清空所有数据库
+  quit # 退出，或exit
+  SHUTDOWN # 关闭redis服务
 
-# 处理登录redis提示waring错误
-$ redis-cli -a password123 -p 6379 2>/dev/null # 忽略警告信息
+  # 处理登录redis提示waring错误
+  $ redis-cli -a password123 -p 6379 2>/dev/null # 忽略警告信息
 
-# 关闭redis服务
-$ redis-cli -a password123 -p 6379 shutdown
+  # 关闭redis服务
+  $ redis-cli -a password123 -p 6379 shutdown
 ```
 
 ### 卸载
@@ -140,7 +140,7 @@ $ redis-cli -a password123 -p 6379 shutdown
 # 停止redis服务
 $ redis-cli -a password123 -p 6379 shutdown
 
-# 删除目录
+  # 删除目录
 $ rm -rf /usr/local/bin/redis-*
 ```
 
@@ -183,3 +183,29 @@ shutdown  #关闭redis服务
 ```bash
 redis-cli --raw
 ```
+
+## Question
+
+### Redis是单线程为什么这么快
+
+Redis是基于内存操作，CPU不是Redis的性能瓶颈，Redis的性能瓶颈是机器的内存和网络带宽。
+
+核心：Redis是将所有的数据全部放在内存中的，所有说使用单线程去操作执行效率就是最高的，多线程在执行过程中需要进行 CPU 的上下文切换，这个是耗时操作。
+
+对于内存系统来说，如果没有上下文切换效率就是最高的，多次读写都是在一个 CPU 上的，在内存情况下，这个就是最佳方案。
+
+Redis 采用网络IO多路复用技术来保证在多连接的时候， 系统的高吞吐量。
+
+Redis使用跳表，链表，动态字符串，压缩列表等来实现它的数据结构，效率更高。
+
+### redis缓存如何保持一致性
+
+读数据的时候首先去 Redis 中读取，没有读到再去 MySQL 中读取，读取到数据更新到 Redis 中作为下一次的缓存。
+
+写数据的时候会产生数据不一致的问题。无论是先写入 Redis 再写入 MySQL 中，还是先写入 MySQL 再写入 Redis 中，这两步操作都不能保证原子性，所以会出现 Redis 和 MySQL 中数据不一致的问题。
+
+无论采取何种方式都不能保证强一致性，如果对 Redis 中的数据设置了过期时间，能够保证最终一致性，对架构的优化只能降低发生的概率，不能从根本上避免不一致性。
+
+更新缓存的两种方式：删除失效缓存、更新缓存。
+
+更新缓存和数据库有两种顺序：先数据库后缓存、先缓存后数据库。

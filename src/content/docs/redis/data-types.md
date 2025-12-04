@@ -82,6 +82,9 @@ set k1 abcd123456
 # 获取索引0到-1之间的字符
 getrange k1 0 -1
 
+# 截取字符串[0,4]
+getrange k1 0 4
+
 # 从索引4开始替换为efgh
 setrange k1 4 efgh
 # 返回值：
@@ -111,9 +114,9 @@ decrby n1 5
 ```bash
 set s1 hello
 
-strlen s1
+strlen s1 # 获取字符串长度
 
-append s1 world
+append s1 world  # 追加值，如果不存在，相当于set key
 ```
 
 ### 分布式锁
@@ -123,12 +126,13 @@ set k1 v1
 
 expire k1 10
 
+# 查看剩余过期时间
 ttl k1
 
 # 设置k1为v1，并且10s后过期
 setex k1 10 v1
 
-# 若k1不存在，则设置k1为v2
+# 若k1不存在，则设置k1为v2，若存在时设置失败
 setnx k1 v2
 ```
 
@@ -139,6 +143,17 @@ setnx k1 v2
 getset k1 hello
 ```
 
+### 对象
+
+```shell
+# 设置一个user:1对象，值为json字符
+set user:1 {name:zhangsan,age:20}
+
+mset user:2:name lisi user:2:age 18
+
+mget user:2:name user:2:age
+```
+
 ### 应用场景
 
 1. 抖音视频点赞 `incr video1:1`
@@ -147,6 +162,7 @@ getset k1 hello
 ## List 列表
 
 - 是一个双端链表的结构
+- l开头表示队列左侧执行，r表示队列右侧执行
 
 ### 操作
 
@@ -378,50 +394,50 @@ sintercard 2 set1 set2
 
 ### 常用操作
 
-```text
--- 向有序集合中加入一个元素和该元素的分数
+```shell
+# 向有序集合中加入一个元素和该元素的分数
 zadd zset1 100 value1 150 value2 200 value3
 
--- 返回索引从0到-1之间的全部元素
+# 返回索引从0到-1之间的全部元素
 zrange zset1 0 -1
 
--- 按照元素分数从小到大排序
+# 按照元素分数从小到大排序
 zrange zset1 0 -1 withscores
 
--- 按照元素分数从大到小排序
+# 按照元素分数从大到小排序
 zrevrange zset1 0 -1 withscores
 
--- 获取指定分数范围的元素
+# 获取指定分数范围的元素
 zrangebyscore zset1 150 200 withscores
 
--- 获取指定分数范围的元素，不包含150 200
+# 获取指定分数范围的元素，不包含150 200
 zrangebyscore zset1 (150 200 withscores
 
--- 获取指定分数范围的元素，不包含150 200，分页显示
+# 获取指定分数范围的元素，不包含150 200，分页显示
 zrangebyscore zset1 (150 200 withscores limit  0 1
 
--- 获取元素的分数
+# 获取元素的分数
 zscore zset1 value1
 
--- 获取集合中元素的数量
+# 获取集合中元素的数量
 zcard zset1
 
--- 删除元素
+# 删除元素
 zrem zset1 value3
 
--- 增加某个元素的分数
+# 增加某个元素的分数
 zincrby zset1 1 value1
 
--- 统计指定分数范围内的元素个数
+# 统计指定分数范围内的元素个数
 zcount zset1 100 200
 
--- 弹出最小的一个元素
+# 弹出最小的一个元素
 zmpop 1 zset1 min count 1
 
--- 正序获取下标值
+# 正序获取下标值
 zrank zset1 value1
 
--- 逆序获取下标值
+# 逆序获取下标值
 zrevrank zset1 value3
 ```
 
@@ -439,24 +455,24 @@ zrevrank zset1 value3
 
 ### 常用操作
 
-```text
--- 给下标为0赋值value
+```shell
+# 给下标为0赋值value
 setbit b1 0 1
 
 setbit b1 1 1
 
 setbit b1 2 0
 
--- 获取下标为2的value值
+# 获取下标为2的value值
 getbit b1 2
 
--- 统计当前key占用的字节数。超过8个字节自动扩容新的
+# 统计当前key占用的字节数。超过8个字节自动扩容新的
 strlen b1
 
--- 统计当前key的value为1的总数
+# 统计当前key的value为1的总数
 bitcount b1
 
--- 统计20251010和20251011两天都签到的人
+# 统计20251010和20251011两天都签到的人
 bitop and b2 20251010 20251011
 
 bitcount b2
@@ -506,13 +522,15 @@ strlen sign:u1
 
 ### 常用操作
 
-```text
+```shell
 pfadd h1 1 2 3 4 5
 
 pfadd h2 1 2 2 2 5 6
 
+# 统计基数
 pfcount h2
 
+# 合并后，生成新的
 pfmerge hresult h1 h2
 
 pfcount hresult
@@ -530,26 +548,27 @@ pfcount hresult
 
 ### 常用操作
 
-```text
--- 添加经纬度坐标
+```shell
+# 添加经纬度坐标
 geoadd city 116.41 39.90 "北京" 121.47 31.23 "上海" 114.05 22.55 "深圳"
 
+# 查看类型。底层就是zset，可以使用zset命令操作geo
 type city
--- zset
+zset
 
--- 返回经纬度
+# 返回经纬度
 geopos city 北京 上海
 
--- 返回坐标的hash值
+# 返回坐标的hash值
 geohash city 北京 上海
 
--- 返回两个位置之间的距离，默认米
+# 返回两个位置之间的距离，默认米，设置为千米
 geodist city 北京 上海 km
 
--- 返回以苏州为中心，指定半径范围内的所有位置
+# 返回以苏州为中心，指定半径范围内的所有位置
 georadius city 120.59 31.30 100 km withdist withhash count 10 desc
 
--- 返回以上海为中心，指定半径范围内的所有位置
+# 返回以上海为中心，指定半径范围内的所有位置
 georadiusbymember city 上海 100 km withdist withhash count 10 desc
 ```
 

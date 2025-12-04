@@ -15,25 +15,51 @@
     backdrop-filter: blur(16px);
 }
 
+[data-has-hero] .page {
+    background: linear-gradient(60deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(40, 120, 255, 0.15) 20%,
+    rgba(70, 150, 255, 0.35) 35%,
+    rgba(100, 170, 255, 0.45) 45%,
+    rgba(90, 130, 255, 0.5) 50%,
+    rgba(110, 120, 255, 0.55) 60%,
+    rgba(150, 100, 255, 0.65) 75%,
+    rgba(170, 80, 255, 0.75) 90%,
+    rgba(0, 0, 0, 0) 100%
+    );
+}
+
 .sl-markdown-content {
     @apply text-gray-800 dark:text-gray-200 leading-relaxed;
 
+    ul,
+    ol {
+        @apply pl-4 my-3 space-y-1;
+    }
+
     ul {
-        @apply list-disc pl-6 space-y-2 my-4
-        marker:text-blue-500 dark:marker:text-blue-400;
+        @apply list-none;
+    }
+
+    ul > li {
+        @apply relative pl-3;
+    }
+
+    ul > li::before {
+        content: "";
+        @apply absolute left-0 top-2 w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-300;
     }
 
     ol {
-        @apply list-decimal pl-6 space-y-2 my-4
-        marker:text-blue-600 marker:font-semibold
-        dark:marker:text-blue-400;
+        @apply list-decimal;
     }
 
-    li {
-        @apply pl-2;
+    ol > li {
+        @apply pl-1;
+    }
 
-        > ul, > ol {
-            @apply my-2;
-        }
+    li > ul,
+    li > ol {
+        @apply my-2 pl-4;
     }
 }
