@@ -15,7 +15,7 @@ sidebar:
 - value最大512MB
 - 单值单value
 
-```bash
+```shell
 # 设置key
 set name '张三'
 
@@ -175,6 +175,9 @@ type list1
 # 获取列表所有元素
 lrange list1 0 -1
 
+# 通过区间获取值。类似于栈，先进后出，后进先出
+lrange list 0 1  
+
 # 从右插入，输出 100 200 300 400 500
 rpush list2 100 200 300 400 500
 ```
@@ -244,6 +247,7 @@ lrange list2 0 -1
 ```bash
 lpush list1 0 1 2
 
+# 将列表中指定下标的值替换成另一个值，更新操作
 lset list1 1 0
 
 # 输出： 2 0 0
@@ -275,6 +279,7 @@ lrange list1 0 -1
 ```bash
 hset user:001 id 001 name zhangsan age 25
 
+# 获取一个字段值
 hget user:001 id
 
 hget user:001 name
@@ -283,8 +288,10 @@ hmset u:2 id 2 name wangwu
 
 hmget u:2 id name
 
+# 获取全部数据
 hgetall user:001
 
+# 删除指定的key，对应的value也会被删除
 hdel user:001 age
 
 # 获取某个key的全部数量
