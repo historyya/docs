@@ -19,6 +19,16 @@ export default defineConfig({
                     href: "https://github.com/historyya",
                 },
             ],
+            head: [
+                {
+                    tag: 'script',
+                    attrs: {
+                        src: 'https://cloud.umami.is/script.js',
+                        'data-website-id': '6fb3c6b4-78da-4883-8356-64dc6b75451c',
+                        defer: true,
+                    },
+                },
+            ],
             sidebar: [
                 {
                     label: "Guides",
