@@ -1,7 +1,25 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 :root {
     --sl-content-gap-y: 1rem;
+
+    --sl-text-h1: var(--sl-text-3xl);
+    --sl-text-h2: var(--sl-text-2xl);
+    --sl-text-h3: var(--sl-text-xl);
+    --sl-text-h4: var(--sl-text-lg);
+    --sl-text-h5: var(--sl-text-base);
+
+    --sl-content-width: 60rem;
+
+    --sl-color-accent: #4db8ff;
+    --sl-color-bg-nav: var(--sl-color-black);
+    --sl-color-bg-sidebar: var(--sl-color-black);
+}
+
+:root[data-theme=light] {
+    --sl-color-bg-nav: var(--sl-color-bg);
 }
 
 .hero-html {
@@ -34,32 +52,32 @@
 
     ul,
     ol {
-        @apply pl-4 my-3 space-y-1;
+        @apply pl-4 my-2 space-y-1;
     }
 
     ul {
-        @apply list-none;
-    }
-
-    ul > li {
-        @apply relative pl-3;
-    }
-
-    ul > li::before {
-        content: "";
-        @apply absolute left-0 top-2 w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-300;
+        @apply list-disc;
     }
 
     ol {
         @apply list-decimal;
     }
+}
 
-    ol > li {
-        @apply pl-1;
-    }
+.content-panel + .content-panel {
+    @apply border-t-0;
+}
 
-    li > ul,
-    li > ol {
-        @apply my-2 pl-4;
-    }
+.sidebar a[aria-current=page] {
+    @apply font-medium bg-transparent;
+    color: var(--sl-color-accent);
+}
+
+.sidebar-pane {
+    border-inline-end: 1px solid #fff;
+    @apply dark:[border-inline-end:1px_solid_#333];
+}
+
+.right-sidebar-container {
+    --sl-color-hairline: #0000 !important;
 }
