@@ -108,6 +108,11 @@ export default defineConfig({
                     collapsed: true
                 },
                 {
+                    label: "RabbitMQ",
+                    autogenerate: {directory: "rabbitmq"},
+                    collapsed: true
+                },
+                {
                     label: "Nginx",
                     autogenerate: {directory: "nginx"},
                     collapsed: true
