@@ -7,7 +7,7 @@ sidebar:
 
 下载地址：https://www.azul.com/downloads/?package=jdk#zulu
 
-```bash
+```bash frame="none"
 # 查看JDK版本
 java --version
 ```

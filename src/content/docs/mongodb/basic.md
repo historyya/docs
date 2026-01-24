@@ -52,6 +52,45 @@ db.users.drop()
 
 ### 插入
 
-```sql
+- 如果post集合不存在，则会隐式创建
 
+```sql
+db.post.insert({"title":"Next.js 16","content":"This release provides the latest improvements to Turbopack, caching, and the Next.js architecture. Since the previous beta release, we added several new features and improvements"})
+              
+-- 批量插入
+db.post.insertMany([
+{"title":"title one","content":"content one"},
+{"title":"title two","content":"content two"},
+])
+```
+
+### 查询
+
+```sql
+db.post.find()
+
+-- 单条查询
+db.post.findOne({title: 'title one'})
+
+-- 查询返回指定字段
+db.post.find({title: 'title one'},{title:1,content:1,_id:0})
+```
+
+### 更新
+
+```sql
+-- 更新id为1的title的值
+db.post.update({_id:"1"},{$set:{title:'title one update'}})
+
+-- 修改所有符合条件的数据
+db.post.update({_id:"1"},{$set:{title:'title one update'}},{multi:true})
+```
+
+### 删除
+
+```sql
+db.post.remove({_id: '1'})
+
+-- 删除全部
+db.post.remove({})
 ```
