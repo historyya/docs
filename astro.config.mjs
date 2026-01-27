@@ -133,6 +133,11 @@ export default defineConfig({
           collapsed: true,
         },
         {
+          label: "Computer Network",
+          autogenerate: { directory: "network" },
+          collapsed: true,
+        },
+        {
           label: "RuanKao",
           autogenerate: { directory: "ruankao" },
           collapsed: true,
