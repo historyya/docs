@@ -1,28 +1,34 @@
 ---
-title: fetch
-description: fetch
+title: Promise
+description: Promise
 sidebar:
   order: 1
 ---
 
-## 用法
+## Async
 
 ```js
+// async function 永远返回一个promise
 async function fetchData() {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts");
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    const data = await response.json();
-    console.log(data);
+    // return Promise.resolve(response.json());
+    return await response.json();
   } catch (error) {
     console.error("Error fetching data:", error);
   }
 }
 
-fetchData();
+// 使用then()来获取返回值
+fetchData().then((data) => {
+  console.log(data);
+});
+```
 
+```js
 async function fetchAllData() {
   try {
     const [response1, response2] = await Promise.all([
