@@ -93,6 +93,11 @@ export default defineConfig({
           collapsed: true,
         },
         {
+          label: "PostgreSQL",
+          autogenerate: { directory: "postgresql" },
+          collapsed: true,
+        },
+        {
           label: "MySQL",
           autogenerate: { directory: "mysql" },
           collapsed: true,
