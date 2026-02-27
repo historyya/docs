@@ -92,3 +92,41 @@
     @apply underline;
   }
 }
+
+table {
+  @apply table-auto w-full border-separate border-spacing-0 rounded-xl overflow-hidden;
+  /* border: 1px solid var(--sl-color-gray-5); */
+}
+
+thead th {
+  @apply px-5 py-3 text-xs font-semibold tracking-widest uppercase border-b;
+  background-color: var(--sl-color-gray-6);
+  color: var(--sl-color-gray-3);
+  border-color: var(--sl-color-gray-5);
+}
+
+thead th:first-child {
+  border-radius: 0.75rem 0 0 0;
+}
+
+thead th:last-child {
+  border-radius: 0 0.75rem 0 0;
+}
+
+tbody tr {
+  @apply transition-colors duration-150;
+}
+
+tbody tr:hover {
+  background-color: var(--sl-color-gray-6);
+}
+
+tbody td {
+  @apply px-5 py-4 text-sm border-b align-middle;
+  color: var(--sl-color-gray-2);
+  border-color: var(--sl-color-gray-5);
+}
+
+tbody tr:last-child td {
+  @apply border-b-0;
+}
