@@ -1,0 +1,492 @@
+---
+import { getCollection } from "astro:content";
+
+type SectionMeta = {
+  label: string;
+};
+
+const sectionMeta = {
+  go: { label: "Go" },
+  nodejs: { label: "Node.js" },
+  javascript: { label: "JavaScript" },
+  react: { label: "React" },
+  rust: { label: "Rust" },
+  linux: { label: "Linux" },
+  java: { label: "Java" },
+  kotlin: { label: "Kotlin" },
+  docker: { label: "Docker" },
+  nginx: { label: "Nginx" },
+  postgresql: { label: "PostgreSQL" },
+  mysql: { label: "MySQL" },
+  redis: { label: "Redis" },
+  mongodb: { label: "MongoDB" },
+  rabbitmq: { label: "RabbitMQ" },
+  git: { label: "Git" },
+  network: { label: "Network" },
+  frontend: { label: "Frontend" },
+  backend: { label: "Backend" },
+  ruankao: { label: "Software Exam" },
+  guides: { label: "Guides" },
+} as const satisfies Record<string, SectionMeta>;
+
+const entries = await getCollection("docs");
+const sections = Array.from(
+  new Set(
+    entries
+      .map((entry) => entry.slug ?? entry.id)
+      .filter((slug) => slug?.includes("/"))
+      .map((slug) => slug?.split("/")[0])
+      .filter((slug): slug is string => Boolean(slug)),
+  ),
+).sort((a, b) => a.localeCompare(b, "en"));
+
+const sectionCounts = entries.reduce<Record<string, number>>((acc, entry) => {
+  const slug = entry.slug ?? entry.id;
+  if (!slug?.includes("/")) return acc;
+  const key = slug.split("/")[0];
+  if (!key) return acc;
+  acc[key] = (acc[key] ?? 0) + 1;
+  return acc;
+}, {});
+
+const sectionCards = sections.map((section) => {
+  const meta = sectionMeta[section] ?? { label: section };
+  return {
+    section,
+    label: meta.label,
+    count: sectionCounts[section] ?? 0,
+  };
+});
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1324" />
+    <meta
+      name="description"
+      content="Browse documentation sections and jump into each knowledge domain."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Documentation Sections</title>
+    <style>
+      :root {
+        --bg: #0b1324;
+        --panel: #111d34;
+        --panel-2: #0e1a2f;
+        --text: #e8eefc;
+        --muted: #a7b4d4;
+        --accent: #49d9ff;
+        --accent-2: #7de0b2;
+        --border: #213152;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            1300px 700px at 8% -10%,
+            #1e3a8a 0%,
+            rgba(30, 58, 138, 0) 58%
+          ),
+          radial-gradient(
+            900px 520px at 100% 0%,
+            #0f766e 0%,
+            rgba(15, 118, 110, 0) 60%
+          ),
+          var(--bg);
+        min-height: 100vh;
+      }
+      main {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 64px 20px 84px;
+      }
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 28px;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(28px, 4vw, 42px);
+        letter-spacing: 0.02em;
+      }
+      .meta {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 14px;
+        margin-top: 6px;
+      }
+      .toolbar {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 16px 0 24px;
+        position: sticky;
+        top: 8px;
+        z-index: 2;
+        backdrop-filter: blur(4px);
+      }
+      .search {
+        flex: 1;
+        min-width: 220px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: linear-gradient(
+          180deg,
+          rgba(17, 29, 52, 0.9),
+          rgba(14, 26, 47, 0.85)
+        );
+        box-shadow: inset 0 1px 0 rgba(232, 238, 252, 0.04);
+      }
+      .kbd {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 20px;
+        min-width: 20px;
+        padding: 0 6px;
+        border-radius: 6px;
+        border: 1px solid rgba(167, 180, 212, 0.4);
+        color: var(--muted);
+        font-size: 11px;
+        background: rgba(167, 180, 212, 0.08);
+      }
+      .search input {
+        flex: 1;
+        background: transparent;
+        border: 0;
+        color: var(--text);
+        font-size: 14px;
+        outline: none;
+      }
+      .search:focus-within {
+        border-color: rgba(73, 217, 255, 0.55);
+        box-shadow:
+          inset 0 1px 0 rgba(232, 238, 252, 0.04),
+          0 0 0 3px rgba(73, 217, 255, 0.14);
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(167, 180, 212, 0.4);
+        color: var(--muted);
+        font-size: 12px;
+        background: rgba(167, 180, 212, 0.08);
+      }
+      .chip strong {
+        color: var(--text);
+        font-weight: 600;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .card {
+        border: 1px solid var(--border);
+        background: linear-gradient(
+          180deg,
+          rgba(17, 29, 52, 0.95),
+          rgba(12, 22, 41, 0.95)
+        );
+        border-radius: 16px;
+        padding: 16px;
+        animation: card-in 320ms ease both;
+        transition:
+          transform 180ms ease,
+          border-color 180ms ease,
+          box-shadow 180ms ease;
+      }
+      .card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(73, 217, 255, 0.4);
+        box-shadow: 0 12px 28px rgba(6, 13, 30, 0.4);
+      }
+      .card a {
+        display: grid;
+        gap: 10px;
+        color: var(--text);
+        text-decoration: none;
+      }
+      .card a:focus-visible {
+        outline: 2px solid rgba(73, 217, 255, 0.8);
+        outline-offset: 5px;
+        border-radius: 10px;
+      }
+      .card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 26px;
+        padding: 0 10px;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          rgba(73, 217, 255, 0.16),
+          rgba(125, 224, 178, 0.22)
+        );
+        color: var(--accent);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+        line-height: 1.35;
+      }
+      .meta-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .count {
+        color: var(--accent-2);
+      }
+      .highlight {
+        background: rgba(73, 217, 255, 0.2);
+        color: var(--text);
+        padding: 0 2px;
+        border-radius: 4px;
+      }
+      .footer {
+        margin-top: 28px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .footer code {
+        color: var(--accent-2);
+      }
+      .empty {
+        display: none;
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .empty.show {
+        display: block;
+      }
+      @keyframes card-in {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .card {
+          animation: none;
+          transition: none;
+        }
+      }
+      @media (max-width: 640px) {
+        main {
+          padding-top: 46px;
+        }
+        header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <h1>Documentation Sections</h1>
+          <div class="subtitle">A top-level map of your knowledge domains</div>
+        </div>
+        <div class="meta">{sections.length} sections</div>
+      </header>
+      <div class="toolbar">
+        <label class="search" for="section-search">
+          <span class="pill">Search</span>
+          <input
+            id="section-search"
+            type="search"
+            placeholder="Search sections..."
+            autocomplete="off"
+            aria-label="Search sections"
+          />
+          <span class="kbd">/</span>
+          <span class="kbd">Esc</span>
+        </label>
+        <div class="chip" id="section-count">
+          Showing <strong>{sections.length}</strong> / {sections.length}
+        </div>
+      </div>
+      <ul class="grid" aria-live="polite">
+        {
+          sectionCards.map(({ section, label, count }) => (
+            <li class="card">
+              <a
+                href={`/${section}/`}
+                data-section={section}
+                data-label={label}
+                data-search={`${section} ${label}`.toLowerCase()}
+              >
+                <span class="title">{label}</span>
+                <div class="meta-row">
+                  <span class="count">{count} docs</span>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="empty" id="section-empty">No matching sections found.</div>
+      <script>
+        const input = document.getElementById("section-search");
+        const cards = Array.from(document.querySelectorAll(".card"));
+        const empty = document.getElementById("section-empty");
+        const count = document.getElementById("section-count");
+        const params = new URLSearchParams(window.location.search);
+        const initialQuery = params.get("q") ?? "";
+
+        const escapeHtml = (text) =>
+          text.replace(
+            /[&<>"]/g,
+            (char) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char],
+          );
+
+        const highlight = (text, query) => {
+          if (!query) return escapeHtml(text);
+          const lower = text.toLowerCase();
+          const q = query.toLowerCase();
+          let result = "";
+          let i = 0;
+          while (i < text.length) {
+            const idx = lower.indexOf(q, i);
+            if (idx === -1) {
+              result += escapeHtml(text.slice(i));
+              break;
+            }
+            result += escapeHtml(text.slice(i, idx));
+            result += `<mark class=\"highlight\">${escapeHtml(text.slice(idx, idx + q.length))}</mark>`;
+            i = idx + q.length;
+          }
+          return result;
+        };
+
+        if (input instanceof HTMLInputElement && empty) {
+          const cardRefs = cards
+            .map((card) => {
+              const link = card.querySelector("a[data-section]");
+              if (!(link instanceof HTMLAnchorElement)) return null;
+
+              return {
+                card,
+                section: link.dataset.section ?? "",
+                label: link.dataset.label ?? "",
+                searchText: link.dataset.search ?? "",
+                titleEl: card.querySelector(".title"),
+                pathEl: card.querySelector(".path"),
+              };
+            })
+            .filter(Boolean);
+
+          input.value = initialQuery;
+
+          const applyFilter = () => {
+            const query = input.value.trim().toLowerCase();
+            let visible = 0;
+            for (const ref of cardRefs) {
+              const match = !query || ref.searchText.includes(query);
+              ref.card.style.display = match ? "" : "none";
+              if (match) visible += 1;
+
+              if (ref.titleEl) {
+                ref.titleEl.innerHTML = highlight(
+                  ref.label || ref.section,
+                  query,
+                );
+              }
+              if (ref.pathEl) {
+                ref.pathEl.innerHTML = highlight(`/${ref.section}/`, query);
+              }
+            }
+
+            empty.classList.toggle("show", visible === 0);
+            if (count)
+              count.innerHTML = `Showing <strong>${visible}</strong> / ${cards.length}`;
+
+            if (query) {
+              params.set("q", query);
+            } else {
+              params.delete("q");
+            }
+            const queryString = params.toString();
+            history.replaceState(
+              null,
+              "",
+              queryString ? `?${queryString}` : window.location.pathname,
+            );
+          };
+
+          input.addEventListener("input", applyFilter);
+          input.addEventListener("keydown", (event) => {
+            if (event.key !== "Escape") return;
+            input.value = "";
+            applyFilter();
+          });
+
+          document.addEventListener("keydown", (event) => {
+            if (
+              event.key !== "/" ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.altKey
+            )
+              return;
+            const target = event.target;
+            if (
+              target instanceof HTMLInputElement ||
+              target instanceof HTMLTextAreaElement
+            )
+              return;
+            event.preventDefault();
+            input.focus();
+            input.select();
+          });
+
+          applyFilter();
+        }
+      </script>
+    </main>
+  </body>
+</html>
