@@ -2,7 +2,7 @@
 title: Web Component
 description: Web Component
 sidebar:
-  order: 50
+  order: 61
 ---
 
 ## 基本使用
