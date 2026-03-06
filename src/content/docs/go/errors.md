@@ -1,13 +1,13 @@
 ---
-title: 错误处理
-description: 错误处理
+title: error
+description: error
 sidebar:
   order: 32
 ---
 
-## 错误处理
+> 错误是值，不是异常
 
-### error
+## error
 
 - 用于数据库连接错误，文件读写错误等
 
@@ -17,7 +17,7 @@ type error interface {
 }
 ```
 
-### defer
+## defer
 
 - 资源清理（关闭文件，释放锁，数据库关闭）
 
@@ -49,7 +49,7 @@ func main() {
 }
 ```
 
-### panic/recover
+## panic/recover
 
 - 处理不可恢复的错误（如数组越界）
 
@@ -61,7 +61,7 @@ panic("panic")
 func recover() interface{}
 ```
 
-### 示例
+## 示例
 
 ```go
 package main

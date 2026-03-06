@@ -93,6 +93,11 @@ export default defineConfig({
           collapsed: true,
         },
         {
+          label: "PostgreSQL",
+          autogenerate: { directory: "postgresql" },
+          collapsed: true,
+        },
+        {
           label: "MySQL",
           autogenerate: { directory: "mysql" },
           collapsed: true,
@@ -130,6 +135,11 @@ export default defineConfig({
         {
           label: "Backend",
           autogenerate: { directory: "backend" },
+          collapsed: true,
+        },
+        {
+          label: "Computer Network",
+          autogenerate: { directory: "network" },
           collapsed: true,
         },
         {
