@@ -53,6 +53,11 @@ export default defineConfig({
           collapsed: true,
         },
         {
+          label: "NestJS",
+          autogenerate: { directory: "nestjs" },
+          collapsed: true,
+        },
+        {
           label: "Go",
           autogenerate: { directory: "go" },
           collapsed: true,
