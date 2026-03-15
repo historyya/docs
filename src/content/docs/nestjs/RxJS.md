@@ -5,7 +5,9 @@ sidebar:
   order: 2
 ---
 
-> RxJS 使用的是观察者模式，用来编写异步队列和事件处理
+## 概念
+
+> RxJS 使用的是观察者模式，用来编写异步队列和事件处理。
 
 ## Observable
 
@@ -32,4 +34,33 @@ observable.subscribe({
     console.log("complete");
   },
 });
+
+// 输出 1 2 3 4 complete
+```
+
+## interval
+
+```ts
+import { interval, take } from "rxjs";
+
+interval(100)
+  .pipe(take(5))
+  .subscribe((e) => console.log(e));
+
+// 输出 0 1 2 3 4
+```
+
+## of
+
+```ts
+import { filter, map, of } from "rxjs";
+
+of(1, 2, 3, 4, 5, 6)
+  .pipe(
+    map((v) => ({ num: v })),
+    filter((v) => v.num % 2 == 0),
+  )
+  .subscribe((e) => {
+    console.log(e);
+  });
 ```
