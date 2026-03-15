@@ -53,6 +53,11 @@ export default defineConfig({
           collapsed: true,
         },
         {
+          label: "Next.js",
+          autogenerate: { directory: "nextjs" },
+          collapsed: true,
+        },
+        {
           label: "Go",
           autogenerate: { directory: "go" },
           collapsed: true,

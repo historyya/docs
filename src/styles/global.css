@@ -93,9 +93,9 @@
   }
 }
 
+/* border: 1px solid var(--sl-color-gray-5); */
 table {
   @apply table-auto w-full border-separate border-spacing-0 rounded-xl overflow-hidden;
-  /* border: 1px solid var(--sl-color-gray-5); */
 }
 
 thead th {

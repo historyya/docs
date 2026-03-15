@@ -1,11 +1,11 @@
 ---
-title: 安装
-description: 安装
+title: install
+description: install
 sidebar:
   order: 1
 ---
 
-## 使用 Volta 安装
+## 使用 Volta 安装 Node.js
 
 ```bash
 curl https://get.volta.sh | bash
@@ -20,10 +20,35 @@ corepack enable pnpm
 # 或
 volta install pnpm
 
+volta uninstall typescript
+
+volta list
+
 pnpm -v
 ```
 
-### npm 命令
+## pnpm 常用命令
+
+使用 [Volta](https://github.com/volta-cli/volta)
+
+```bash
+# 查看仓库路径
+$ pnpm store path
+
+# 安装包
+$ pnpm add react
+
+# 安装项目依赖
+$ pnpm install
+
+# 卸载包
+$ pnpm remove react
+
+# 升级依赖
+$ pnpm update
+```
+
+## npm 常用命令
 
 ```bash
 npm init
