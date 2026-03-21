@@ -7,6 +7,22 @@ sidebar:
 
 ## 基本使用
 
+### 配置
+
+```ts
+// src/proxy.ts
+import { NextRequest, NextResponse } from "next/server";
+
+export function proxy(request: NextRequest, response: NextResponse) {
+  console.log("Proxying request:", request.nextUrl.pathname);
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};
+```
+
 ### 应用场景
 
 - 处理跨域请求
