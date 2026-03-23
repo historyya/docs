@@ -38,18 +38,23 @@ export default defineConfig({
           ],
         },
         {
-          label: "Nodejs",
-          autogenerate: { directory: "nodejs" },
-          collapsed: true,
-        },
-        {
           label: "JavaScript",
           autogenerate: { directory: "javascript" },
           collapsed: true,
         },
         {
+          label: "Nodejs",
+          autogenerate: { directory: "nodejs" },
+          collapsed: true,
+        },
+        {
           label: "React",
           autogenerate: { directory: "react" },
+          collapsed: true,
+        },
+        {
+          label: "React Router",
+          autogenerate: { directory: "reactrouter" },
           collapsed: true,
         },
         {
@@ -150,11 +155,6 @@ export default defineConfig({
         {
           label: "Computer Network",
           autogenerate: { directory: "network" },
-          collapsed: true,
-        },
-        {
-          label: "RuanKao",
-          autogenerate: { directory: "ruankao" },
           collapsed: true,
         },
       ],
