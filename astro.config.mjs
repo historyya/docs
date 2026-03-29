@@ -58,6 +58,11 @@ export default defineConfig({
           collapsed: true,
         },
         {
+          label: "Zustand",
+          autogenerate: { directory: "zustand" },
+          collapsed: true,
+        },
+        {
           label: "Next.js",
           autogenerate: { directory: "nextjs" },
           collapsed: true,
