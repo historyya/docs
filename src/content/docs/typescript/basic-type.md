@@ -85,7 +85,7 @@ let o2: object = [1, 2, 3];
 let o3: object = () => 18;
 ```
 
-###
+### new Object
 
 ```ts
 let a1: {} = 12; // => new Object
@@ -980,4 +980,20 @@ type Options<T extends object> = {
 };
 
 type B = Options<Res>;
+```
+
+## namespace
+
+```ts
+namespace MyApp {
+  // namespace 所有的变量和方法必须导出才能访问
+  export let version: string = "1.0.0";
+
+  export function add(x: number, y: number): number {
+    return x + y;
+  }
+}
+
+console.log(MyApp.version);
+console.log(MyApp.add(1, 2));
 ```
