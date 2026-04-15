@@ -43,6 +43,11 @@ export default defineConfig({
           collapsed: true,
         },
         {
+          label: "TypeScript",
+          autogenerate: { directory: "typescript" },
+          collapsed: true,
+        },
+        {
           label: "Nodejs",
           autogenerate: { directory: "nodejs" },
           collapsed: true,

@@ -51,7 +51,10 @@ $ pnpm update
 ## npm 常用命令
 
 ```bash
+# 初始化项目
 npm init
+# 或
+npm init -y
 
 npm install react
 
