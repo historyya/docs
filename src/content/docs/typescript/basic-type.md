@@ -8,6 +8,7 @@ sidebar:
 ## 初始化环境
 
 ```bash
+# 生成ts的配置文件
 tsc --init
 
 tsc -w
@@ -980,6 +981,235 @@ type Options<T extends object> = {
 };
 
 type B = Options<Res>;
+```
+
+### 泛型工具
+
+#### Partial
+
+```ts
+interface User {
+  name: string;
+  age: number;
+  address: string;
+}
+
+// Partial 把 User 的所有属性变成可选的
+type PartialUser = Partial<User>;
+
+// Partial实现原理
+type MyPartial<T> = {
+  [P in keyof T]?: T[P];
+};
+
+// Required 把 PartialUser 的所有属性变成必选的
+type RequiredUser = Required<PartialUser>;
+
+// Required实现原理
+type MyRequired<T> = {
+  [P in keyof T]-?: T[P];
+};
+
+// Pick 从 User 中选择 name 和 age 属性
+type PickUser = Pick<User, "name" | "age">;
+
+// Pick实现原理
+type Pick<T, K extends keyof T> = {
+  readonly [P in K]: T[P];
+};
+
+// Omit 从 User 中排除 address 属性
+type OmitUser = Omit<User, "address">;
+
+// Omit实现原理
+type MyOmit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+// Exclude 从 User 的属性中排除 name 属性
+type ExcludeUser = Exclude<keyof User, "name">;
+
+// Exclude实现原理
+type MyExclude<T, U> = T extends U ? never : T;
+```
+
+#### Record
+
+```ts
+// Record：约束对象的kay和value的类型
+let obj: Record<string, number> = {
+  a: 1,
+  b: 2,
+  c: 3,
+};
+
+// 实现原理
+type MyRecord<K extends keyof any, T> = {
+  [P in K]: T;
+};
+
+// ReturnType：获取函数的返回值类型
+function foo() {
+  return {
+    name: "张三",
+    age: 18,
+  };
+}
+
+type FooReturnType = ReturnType<typeof foo>; // { name: string; age: number; }
+
+// 实现原理
+type MyReturnType<T extends Function> = T extends (...args: any) => infer R
+  ? R
+  : any;
+```
+
+#### infer 类型提取
+
+```ts
+// infer：用于推导泛型参数
+
+// 获取promise返回的参数
+type GetPromiseValue<T> = T extends Promise<infer R> ? R : never;
+
+type PromiseValue = GetPromiseValue<Promise<string>>; // string
+
+// infer协变 出现在对象属性上
+let obj = {
+  name: "zhangsan",
+  age: 18,
+};
+
+// 产生协变后会返回联合类型
+type MyObj<T> = T extends { name: infer R; age: infer R } ? R : T;
+
+type Foo = MyObj<typeof obj>; // string | number
+
+// infer逆变 出现在函数的参数上
+type Bar<T> = T extends {
+  a: (x: infer R) => void;
+  b: (x: infer R) => void;
+}
+  ? R
+  : never;
+
+// 逆变后返回的是交叉类型
+// 既满足string又满足number的类型是never
+type Baz = Bar<{
+  a: (x: string) => void;
+  b: (x: number) => void;
+}>; // never
+```
+
+用法
+
+```ts
+type Arr = ["a", "b", "c"];
+
+// 提取第一个元素
+type First<T extends unknown[]> = T extends [infer F, ...unknown[]] ? F : never;
+
+type first = First<Arr>; // 'a'
+
+// 提取最后一个元素
+type Last<T extends unknown[]> = T extends [...unknown[], infer L] ? L : never;
+
+type last = Last<Arr>; // 'c'
+
+// 删除第一个元素
+type Shift<T extends unknown[]> = T extends [unknown, ...infer R] ? R : never;
+
+type shift = Shift<Arr>; // ['b', 'c']
+
+// 删除最后一个元素
+type Pop<T extends unknown[]> = T extends [...infer R, unknown] ? R : never;
+
+type pop = Pop<Arr>; // ['a', 'b']
+```
+
+#### infer 递归
+
+```ts
+type Arr = [1, 2, 3, 4];
+
+type Reverse<T extends any[], R extends any[] = []> = T extends [
+  infer F,
+  ...infer Rest,
+]
+  ? Reverse<Rest, [F, ...R]>
+  : R;
+
+type ReverseArr = Reverse<Arr>; // expected to be [4, 3, 2, 1]
+```
+
+## set
+
+```ts
+// 1. 天然去重，引用类型除外
+let set: Set<string> = new Set<string>();
+// add: 添加元素
+set.add("Hello");
+set.add("World");
+set.add("Hello");
+// delete: 删除元素
+set.delete("World");
+// has: 判断元素是否存在
+console.log(set.has("Hello")); // true
+console.log(set.has("World")); // false
+// clear: 清空集合
+set.clear();
+console.log(set.size); // 0
+```
+
+## WeakSet
+
+```ts
+let obj = { name: "admin" };
+
+// WeakSet 弱引用
+let weakset: WeakSet<object> = new WeakSet([obj]);
+```
+
+## map
+
+```ts
+let obj = { name: "Alice", age: 30 };
+
+// map的key可以是引用类型
+let map: Map<object, any> = new Map();
+
+map.set(obj, 1);
+map.set({ name: "Bob", age: 25 }, 2);
+map.set({ name: "Charlie", age: 35 }, 3);
+
+console.log(map.get(obj)); // Output: 1
+console.log(map.get({ name: "Bob", age: 25 })); // Output: 2
+console.log(map.get({ name: "Charlie", age: 35 })); // Output: 3
+
+map.delete(obj);
+
+console.log(map.has(obj)); // Output: false
+console.log(map.size); // Output: 2
+
+map.clear();
+
+console.log(map.size); // Output: 0
+```
+
+## WeakMap
+
+```ts
+// WeakMap 弱引用
+// 弱引用不会被计入垃圾回收策略中
+
+let obj: any = { name: "admin" }; // 引用次数：1
+let admin = obj; // 引用次数：2
+
+// WeakMap的key只能是引用类型
+let weakmap: WeakMap<object, any> = new WeakMap();
+
+weakmap.set(obj, "user"); // 引用次数：2
+
+obj = null; // 引用次数：-1
+console.log(admin);
 ```
 
 ## namespace

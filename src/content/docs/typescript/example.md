@@ -1,8 +1,8 @@
 ---
-title: 练习
-description: 练习
+title: 代码实战
+description: 代码实战
 sidebar:
-  order: 100
+  order: 10
 ---
 
 ## 代码雨
@@ -92,4 +92,77 @@ function rain() {
 }
 
 rain();
+```
+
+## TS封装localStorage并支持过期时间
+
+```ts
+interface Data<T> {
+  value: T;
+  [Dictionaries.Expire]: Expire;
+}
+
+type Expire = number | Dictionaries.Permanent;
+
+interface Result<T> {
+  message: string;
+  value: T | null;
+}
+
+interface IStorage {
+  get: <T>(key: string) => Result<T>;
+  set: <T>(key: string, value: T, expire?: Expire) => void;
+  delete: (key: string) => void;
+  clear: () => void;
+}
+
+enum Dictionaries {
+  Permanent = "permanent", // 永久
+  Expire = "__expire__",
+}
+
+export class Storage implements IStorage {
+  get<T>(key: string): Result<T> {
+    const data = localStorage.getItem(key);
+    if (data) {
+      const data1: Data<T> = JSON.parse(data);
+      if (
+        typeof data1[Dictionaries.Expire] === "number" &&
+        data1[Dictionaries.Expire] < new Date().getTime()
+      ) {
+        this.delete(key);
+        return {
+          message: `${key}已过期`,
+          value: null,
+        };
+      } else {
+        return {
+          message: "数据获取成功",
+          value: data1.value,
+        };
+      }
+    } else {
+      return {
+        message: "数据不存在",
+        value: null,
+      };
+    }
+  }
+
+  set<T>(key: string, value: T, expire: Expire = Dictionaries.Permanent) {
+    const data = {
+      value, // 存储的值
+      [Dictionaries.Expire]: expire, // 过期时间
+    };
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  delete(key: string) {
+    localStorage.removeItem(key);
+  }
+
+  clear() {
+    localStorage.clear();
+  }
+}
 ```

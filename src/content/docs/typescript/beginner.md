@@ -223,3 +223,108 @@ const app = new mixins();
 app.run();
 app.render();
 ```
+
+## Decorator 装饰器
+
+[查看Decorator 装饰器的使用](/nestjs/前置知识/#装饰器)
+
+## 发布订阅模式
+
+### 用法
+
+```ts
+const cb = () => {
+  console.log("asd callback...");
+};
+
+// 监听器
+document.addEventListener("asd", cb, {
+  // 只触发一次
+  once: true,
+});
+
+// 订阅中心
+const event = new Event("asd");
+
+// 派发器
+document.dispatchEvent(event);
+
+// 移除监听器
+document.removeEventListener("asd", cb);
+```
+
+### 代码实现
+
+```ts
+// 实现once、on、off、emit方法
+interface I {
+  events: Map<string, Function[]>;
+  on: (event: string, callback: Function) => void;
+  emit: (event: string, ...args: any[]) => void;
+  once: (event: string, listener: Function) => void;
+  off: (event: string, listener: Function) => void;
+}
+
+class Emitter implements I {
+  events: Map<string, Function[]>;
+
+  constructor() {
+    this.events = new Map();
+  }
+
+  on(event: string, callback: Function) {
+    if (!this.events.has(event)) {
+      this.events.set(event, [callback]);
+    }
+    this.events.get(event)?.push(callback);
+  }
+
+  emit(event: string, ...args: any[]) {
+    const listeners = this.events.get(event);
+    if (listeners) {
+      listeners.forEach((listener) => listener(...args));
+    }
+  }
+
+  once(event: string, listener: Function) {
+    const onceListener = (...args: any[]) => {
+      listener(...args);
+      this.off(event, onceListener);
+    };
+    this.on(event, onceListener);
+  }
+
+  off(event: string, listener: Function) {
+    const listeners = this.events.get(event);
+    if (listeners) {
+      this.events.set(
+        event,
+        listeners.filter((l) => l !== listener),
+      );
+    }
+  }
+}
+
+const bus = new Emitter();
+const fn = (bool: boolean, num: number) => {
+  console.log(3, bool, num);
+};
+bus.on("message", (bool: boolean, num: number) => {
+  console.log(1, bool, num);
+});
+
+bus.on("message", (bool: boolean, num: number) => {
+  console.log(2, bool, num);
+});
+
+bus.once("msg", fn);
+
+console.log(bus);
+
+bus.emit("message", false, 1);
+bus.emit("message", false, 1);
+bus.emit("message", false, 1);
+
+bus.on("msg", fn);
+bus.off("msg", fn);
+```
