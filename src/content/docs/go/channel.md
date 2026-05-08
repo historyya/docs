@@ -5,7 +5,7 @@ sidebar:
   order: 9
 ---
 
-### 代码示例
+## channel
 
 ```go
 package main
@@ -68,5 +68,48 @@ func channelWithoutCache() {
 
 	message := <-ch
 	fmt.Println(message)  // Hello, message from channel
+}
+```
+
+## select
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func task(ch1 chan int, ch2 chan string, wait *sync.WaitGroup) {
+	defer wait.Done()
+	for i := 0; i < 5; i++ {
+		ch1 <- i
+		ch2 <- fmt.Sprintf("数据：%d", i)
+	}
+	close(ch1)
+	close(ch2)
+}
+
+func fn1(ch chan int) {
+	ch <- 1
+	ch <- 2
+	ch <- 3
+	close(ch)
+}
+
+func main() {
+	ch1 := make(chan int)
+	go fn1(ch1)
+
+	for {
+		select {
+		case val, ok := <-ch1:
+			if !ok {
+				return
+			}
+			fmt.Println("ch1:", val, ok)
+		}
+	}
 }
 ```
