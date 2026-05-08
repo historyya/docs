@@ -2,7 +2,7 @@
 title: workspace
 description: workspace
 sidebar:
-  order: 105
+  order: 18
 ---
 
 ## 创建 workspace
