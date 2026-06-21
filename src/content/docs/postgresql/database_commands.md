@@ -5,6 +5,14 @@ sidebar:
   order: 3
 ---
 
+## 层级结构
+
+从大到小：
+
+1. 数据库
+2. 模式，默认是`public`
+3. 表
+
 ## 创建数据库
 
 ```sql
@@ -25,7 +33,7 @@ COMMENT ON DATABASE oa_db IS '业务数据库';
 
 ## 切换数据库
 
-```sql
+```bash
 -- 切换到oa_db
 \c oa_db
 
