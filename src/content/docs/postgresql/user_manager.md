@@ -2,10 +2,10 @@
 title: User Manager
 description: User Manager
 sidebar:
-  order: 2
+    order: 2
 ---
 
-## 用户管理实战
+## 用户管理
 
 ### 创建用户
 
@@ -14,11 +14,14 @@ sidebar:
 CREATE USER test WITH PASSWORD 'password123';
 
 -- 创建角色（默认无LOGIN权限）
-CREATE ROLE admin_role;
+CREATE ROLE oa_role;
+
+-- 用户加入角色
+GRANT oa_role TO test;
 
 -- 两者可以互相转换
 ALTER ROLE test NOLOGIN;  -- 用户变角色
-ALTER ROLE admin_role LOGIN;  -- 角色变用户
+ALTER ROLE oa_role LOGIN;  -- 角色变用户
 ```
 
 ### 查看用户信息
@@ -149,11 +152,13 @@ hostssl all             all             0.0.0.0/0             
 
 ```sql
 -- 数据库级别权限
+-- test用户可以访问mydb库
 GRANT CONNECT ON DATABASE mydb TO test;
 GRANT CREATE ON DATABASE mydb TO developer;
 GRANT TEMPORARY ON DATABASE mydb TO app_user;
 
 -- Schema级别权限
+-- test用户可以访问public模式
 GRANT USAGE ON SCHEMA public TO test;
 GRANT CREATE ON SCHEMA public TO developer;
 
