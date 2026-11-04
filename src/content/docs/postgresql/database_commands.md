@@ -5,6 +5,14 @@ sidebar:
   order: 3
 ---
 
+## 层级结构
+
+从大到小：
+
+1. 数据库
+2. 模式，默认是`public`
+3. 表
+
 ## 创建数据库
 
 ```sql
@@ -13,6 +21,21 @@ CREATE DATABASE oa_db;
 
 -- 给数据库添加注释
 COMMENT ON DATABASE oa_db IS '业务数据库';
+
+-- 创建数据库并设置编码
+CREATE DATABASE database_name
+  WITH 
+  OWNER = your_username
+  ENCODING = 'UTF8'
+  TEMPLATE = template0;
+
+-- 完整版
+CREATE DATABASE database_name
+    WITH OWNER = username
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'zh_CN.UTF-8'
+    LC_CTYPE = 'zh_CN.UTF-8'
+    TEMPLATE = template0;
 ```
 
 ## 查看数据库
@@ -25,7 +48,7 @@ COMMENT ON DATABASE oa_db IS '业务数据库';
 
 ## 切换数据库
 
-```sql
+```bash
 -- 切换到oa_db
 \c oa_db
 
@@ -59,6 +82,9 @@ ALTER DATABASE oldname RENAME TO newname;
 CREATE SCHEMA my_schema;
 COMMENT ON SCHEMA my_schema IS '业务模块A的数据空间';
 
+-- 如果不存在，就创建
+CREATE SCHEMA IF NOT EXISTS storage;
+
 -- 创建指定所有者的Schema
 CREATE SCHEMA sales_schema AUTHORIZATION sales_user;
 
@@ -69,17 +95,21 @@ GRANT USAGE ON SCHEMA finance_schema TO finance_user;
 
 ### 查看Schema信息
 
-```bash frame="none"
--- 查看所有Schema
+```bash
+# 查看所有Schema
 \dn
-\dn+  -- 查看详细信息
+# 查看详细信息
+\dn+
 
--- 查看特定Schema下的对象
-\dt my_schema.*    -- 查看所有表
-\dv my_schema.*    -- 查看所有视图
-\df my_schema.*    -- 查看所有函数
+# 查看特定Schema下的对象
+# 查看所有表
+\dt my_schema.*
+# 查看所有视图
+\dv my_schema.*
+# 查看所有函数
+\df my_schema.*
 
--- 通过SQL查询
+# 通过SQL查询
 SELECT schema_name, schema_owner 
 FROM information_schema.schemata 
 ORDER BY schema_name;
@@ -122,10 +152,10 @@ COMMENT ON SCHEMA my_schema IS '新的说明信息';
 ### 删除Schema
 
 ```sql
--- 删除空Schema
+-- 删除空Schema（当前模式下没有一张表）
 DROP SCHEMA IF EXISTS my_schema;
 
--- 删除Schema及其所有对象（谨慎使用！）
+-- 删除Schema及其所有对象（谨慎使用）
 DROP SCHEMA my_schema CASCADE;
 ```
 

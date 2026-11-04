@@ -2,7 +2,7 @@
 title: 工具
 description: 工具
 sidebar:
-  order: 10
+  order: 80
 ---
 
 ## Babel
