@@ -1,10 +1,10 @@
 packages:
-  - .
+    - .
 
 allowBuilds:
-  esbuild: true
-  sharp: true
-  workerd: true
+    esbuild: false
+    sharp: false
+    workerd: false
 
 minimumReleaseAgeExclude:
-  - astro@7.4.5
+    - astro@7.4.5
