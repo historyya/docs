@@ -2,7 +2,7 @@
 title: Nacos
 description: Nacos
 sidebar:
-  order: 52
+  order: 53
 ---
 
 - 服务注册

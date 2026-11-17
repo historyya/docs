@@ -144,11 +144,6 @@ export default defineConfig({
           items: [{ autogenerate: { directory: "rabbitmq" } }],
         },
         {
-          label: "Nginx",
-          collapsed: true,
-          items: [{ autogenerate: { directory: "nginx" } }],
-        },
-        {
           label: "Git",
           collapsed: true,
           items: [{ autogenerate: { directory: "git" } }],
