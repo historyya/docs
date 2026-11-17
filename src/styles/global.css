@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Make `dark:` follow Starlight's theme switch instead of the OS preference. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /* Dark mode colors. */
 :root {
   --sl-color-accent-low: #131e4f;
