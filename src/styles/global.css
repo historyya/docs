@@ -1,135 +1,354 @@
-@import "tailwindcss";
+@layer base, starlight, theme, components, utilities;
 
-/* Make `dark:` follow Starlight's theme switch instead of the OS preference. */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@import "@astrojs/starlight-tailwind";
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 
 /* Dark mode colors. */
 :root {
-  --sl-color-accent-low: #131e4f;
-  --sl-color-accent: #3447ff;
-  --sl-color-accent-high: #b3c7ff;
-  --sl-color-white: #ffffff;
-  --sl-color-gray-1: #eceef2;
-  --sl-color-gray-2: #c0c2c7;
-  --sl-color-gray-3: #888b96;
-  --sl-color-gray-4: #545861;
-  --sl-color-gray-5: #353841;
-  --sl-color-gray-6: #24272f;
-  --sl-color-black: #17181c;
+    --sl-color-accent-low: #2d2d2d;
+    --sl-color-accent: #10a37f;
+    --sl-color-accent-high: #bdbdbd;
+    --sl-color-white: #ffffff;
+    --sl-color-gray-1: #f5f5f5;
+    --sl-color-gray-2: #e0e0e0;
+    --sl-color-gray-3: #bdbdbd;
+    --sl-color-gray-4: #9e9e9e;
+    --sl-color-gray-5: #303030;
+    --sl-color-gray-6: #000000;
+    --sl-color-black: #1a1a1a;
+
+    --open-text-primary: #ffffff;
+    --open-primary: #4db8ff;
+    --open-secondary: #6e6e80;
+    --open-primary-darker: #3e94ce;
+    --open-light-gray: #000;
+    --open-gray-1: #353741;
+    --open-nav-text: #ffffff;
+    --open-nav-category-text: #acacbe;
+    --open-title-color: #000000;
+    --open-toc-highlight: #ffffff;
+    --open-code-background: #161719;
+    --open-code-border-color: var(--open-light-gray);
+    --open-code-highlight-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Light mode colors. */
 :root[data-theme="light"] {
-  --sl-color-accent-low: #c7d6ff;
-  --sl-color-accent: #364bff;
-  --sl-color-accent-high: #182775;
-  --sl-color-white: #17181c;
-  --sl-color-gray-1: #24272f;
-  --sl-color-gray-2: #353841;
-  --sl-color-gray-3: #545861;
-  --sl-color-gray-4: #888b96;
-  --sl-color-gray-5: #c0c2c7;
-  --sl-color-gray-6: #eceef2;
-  --sl-color-gray-7: #f5f6f8;
-  --sl-color-black: #ffffff;
+    --sl-color-accent-low: #ebc9f3;
+    --sl-color-accent: #000000;
+    --sl-color-accent-high: #000000;
+    --sl-color-white: #000000;
+    --sl-color-gray-1: #202123;
+    --sl-color-gray-2: #353740;
+    --sl-color-gray-3: #8e8ea0;
+    --sl-color-gray-4: #acacbe;
+    --sl-color-gray-5: #c5c5d2;
+    --sl-color-gray-6: #d9d9e3;
+    --sl-color-gray-7: #ececf1;
+    --sl-color-black: #ffffff;
+
+    --sl-content-width: 60rem !important;
+
+    --open-text-primary: #202123;
+    --open-text-secondary: #6e6e80;
+    --open-primary: #4db8ff;
+    --open-primary-darker: #3e94ce;
+    --open-light-gray: #f5f5f5;
+    --open-gray-1: #ececf1;
+    --open-gray-05: #f7f7f8;
+    --open-nav-text: #202123;
+    --open-nav-category-text: var(--open-text-secondary);
+    --open-title-color: #000000;
+    --open-toc-highlight: #353740;
+    --open-code-background: var(--open-gray-05);
+    --open-code-border-color: var(--open-gray-1);
+    --open-code-highlight-color: var(--open-gray-1);
 }
 
 :root {
-  --sl-text-h1: var(--sl-text-3xl);
-  --sl-text-h2: var(--sl-text-2xl);
-  --sl-text-h3: var(--sl-text-xl);
-  --sl-text-h4: var(--sl-text-lg);
-  --sl-text-h5: var(--sl-text-base);
+    --sl-text-h1: var(--sl-text-3xl);
+    --sl-text-h2: var(--sl-text-2xl);
+    --sl-text-h3: var(--sl-text-xl);
+    --sl-text-h4: var(--sl-text-lg);
+    --sl-text-h5: var(--sl-text-base);
 
-  --sl-content-width: 60rem;
+    --sl-content-width: 60rem !important;
 }
 
 /* index section */
 .hero-html {
-  @apply flex justify-center text-[min(10rem,calc(5rem+6vw))] leading-[min(10rem,calc(5rem+6vw))] z-[-1];
+    @apply flex justify-center text-[min(10rem,calc(5rem+6vw))] leading-[min(10rem,calc(5rem+6vw))] z-[-1];
 }
 
 /* header */
 .header {
-  border-bottom: 1px solid transparent;
-  background-color: transparent;
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+    border-bottom: 1px solid transparent;
+    background-color: transparent;
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+}
+
+.site-title {
+    color: var(--open-title-color) !important;
+}
+
+h1 {
+    font-weight: 700 !important;
+    margin-top: 0 !important;
+}
+
+.sl-link-button.primary {
+    background: var(--open-primary);
+    border-color: var(--open-primary);
+}
+
+.social-icons > a {
+    color: var(--sl-color-text-accent);
 }
 
 .content-panel + .content-panel {
-  @apply border-t-0;
+    @apply border-t-0;
 }
 
-.sidebar a[aria-current="page"] {
-  @apply w-full rounded-lg transition-colors block;
-}
+.sidebar {
+    .sidebar-content {
+        background-color: var(--sl-color-black);
+    }
 
-.sidebar-content {
-  background-color: var(--sl-color-black);
+    a[aria-current="page"] {
+        @apply w-full rounded-lg transition-colors block;
+        color: var(--open-primary) !important;
+        font-weight: 500 !important;
+        background-color: transparent !important;
+    }
+
+    a {
+        line-height: inherit !important;
+    }
+
+    a:not(:where(.not-content *)) {
+        color: var(--open-nav-text) !important;
+    }
+
+    ul.top-level > li:not(:has(details)) > a {
+        padding-top: 0 !important;
+
+        & > span {
+            font-size: var(--sl-text-sm) !important;
+            font-weight: 500 !important;
+        }
+    }
 }
 
 .sidebar-pane {
-  border-inline-end: 1px solid var(--sl-color-black);
+    border-inline-end: 1px solid var(--sl-color-black);
 }
 
 .right-sidebar-container {
-  --sl-color-hairline: var(--sl-color-black);
+    --sl-color-hairline: var(--sl-color-black);
+}
+
+.right-sidebar-panel {
+    padding-top: 2.5rem !important;
+}
+
+starlight-toc {
+    h2 {
+        font-size: var(--sl-text-2xs);
+        font-weight: 500;
+        color: var(--open-nav-category-text);
+    }
+
+    ul > li {
+        padding-top: 0.3em;
+        padding-bottom: 0.3em;
+        border-inline-start: 0;
+
+        a {
+            color: var(--open-text-primary);
+            padding-inline-start: calc(var(--depth) * 1em);
+        }
+
+        &:has([aria-current="true"]) {
+            a {
+                color: var(--open-primary) !important;
+            }
+            border-left-color: var(--open-toc-highlight);
+        }
+    }
 }
 
 .sl-markdown-content {
-  ul,
-  ol {
-    @apply pl-4 my-2 space-y-1;
-  }
+    code:not(:where(.not-content *)) {
+        border: 1px solid var(--open-gray-1) !important;
+        border-radius: 6px;
+    }
 
-  ul {
-    @apply list-disc;
-  }
+    a:not(:where(.not-content *)) {
+        color: var(--open-primary) !important;
+        text-decoration: none !important;
+    }
 
-  ol {
-    @apply list-decimal;
-  }
+    a:hover:not(:where(.not-content *)) {
+        color: var(--open-primary-darker) !important;
+    }
 
-  a {
-    @apply underline;
-  }
+    table:not(:where(.not-content *)) {
+        font-size: var(--sl-text-sm);
+    }
+
+    table :is(th, td):not(:last-child):not(:where(.not-content *)) {
+        min-width: 5rem;
+    }
+
+    table th:not(:where(.not-content *)) {
+        white-space: nowrap;
+    }
+
+    table td code {
+        white-space: nowrap;
+    }
+
+    .starlight-aside--note {
+        --sl-color-asides-text-accent: var(--sl-color-text) !important;
+    }
+
+    .sl-link-card:hover {
+        background-color: var(--open-gray-1) !important;
+    }
+
+    aside.starlight-aside {
+        background: none;
+        border: 1px solid var(--open-gray-1);
+        border-radius: 8px;
+        font-size: var(--sl-text-sm);
+
+        .starlight-aside__title {
+            font-size: var(--sl-text-sm) !important;
+        }
+
+        .starlight-aside__content {
+            font-size: var(--sl-text-sm) !important;
+        }
+    }
+
+    .expressive-code {
+        .frame.has-title:not(.is-terminal) .header {
+            background: none;
+        }
+
+        .frame.has-title:not(.is-terminal) .title::after {
+            border: none;
+        }
+
+        .mark {
+            background-color: var(--open-code-highlight-color) !important;
+            .code {
+                border-inline-start: 0 !important;
+            }
+        }
+
+        figure {
+            &:not(.is-terminal) {
+                figcaption::before {
+                    /* top bar */
+                    background-color: var(--open-code-background);
+                    border-start-start-radius: var(--open-code-border-radius);
+                    border-start-end-radius: var(--open-code-border-radius);
+                    border-bottom: 1px solid var(--open-code-border-color);
+                    border-color: var(--open-code-border-color);
+                }
+
+                figcaption span {
+                    /* title */
+                    font-family: var(--__sl-font-mono);
+                    font-size: var(--sl-text-2xs);
+                    padding: 0.75em 1rem;
+                    border-start-start-radius: var(--open-code-border-radius);
+                    border-start-end-radius: var(--open-code-border-radius);
+                    background-color: transparent !important;
+                }
+            }
+
+            box-shadow: none;
+            --open-code-border-radius: 8px !important;
+            border-start-start-radius: var(--open-code-border-radius);
+            border-start-end-radius: var(--open-code-border-radius);
+
+            .header {
+                background-color: var(--open-code-background);
+                border-color: var(--open-code-border-color);
+                border-start-start-radius: var(--open-code-border-radius);
+                border-start-end-radius: var(--open-code-border-radius);
+
+                &::after {
+                    border-color: var(--open-code-border-color);
+                }
+            }
+
+            &:not(:has(figcaption > span)) pre {
+                /* if there is no title, we need to round the corners */
+                border-radius: var(--open-code-border-radius);
+            }
+
+            pre {
+                /* code */
+                background-color: var(--open-code-background);
+                border-color: var(--open-code-border-color);
+                border-width: 1px;
+                border-end-start-radius: var(--open-code-border-radius);
+                border-end-end-radius: var(--open-code-border-radius);
+
+                > code {
+                    font-size: var(--sl-text-xs) !important;
+                }
+            }
+
+            &:has(figcaption > span) {
+                .copy button {
+                    top: -0.2rem;
+                }
+            }
+        }
+    }
 }
 
-/* border: 1px solid var(--sl-color-gray-5); */
-table {
-  @apply table-auto w-full border-separate border-spacing-0 rounded-xl overflow-hidden;
+.pagination-links a {
+    border: none !important;
+    box-shadow: none !important;
 }
 
-thead th {
-  @apply px-5 py-3 text-xs font-semibold tracking-widest uppercase border-b;
-  background-color: var(--sl-color-gray-6);
-  color: var(--sl-color-gray-3);
-  border-color: var(--sl-color-gray-5);
+.pagination-links a:hover {
+    background-color: var(--open-light-gray) !important;
 }
 
-thead th:first-child {
-  border-radius: 0.75rem 0 0 0;
-}
+@media (min-width: 72rem) {
+    [data-has-sidebar][data-has-toc] .right-sidebar-container {
+        flex-shrink: 0;
+        width: max(
+            10rem,
+            calc(
+                var(--sl-sidebar-width) +
+                    (100% - var(--sl-content-width) - var(--sl-sidebar-width)) / 2
+            )
+        );
+    }
 
-thead th:last-child {
-  border-radius: 0 0.75rem 0 0;
-}
+    [data-has-sidebar][data-has-toc] .main-pane {
+        flex: 1;
+        min-width: 0;
+    }
 
-tbody tr {
-  @apply transition-colors duration-150;
-}
+    /* Let TOC links wrap inside the space remaining beside the article. */
+    [data-has-sidebar][data-has-toc] .right-sidebar {
+        position: sticky;
+        top: var(--sl-nav-height);
+        padding-top: 0;
+        height: calc(100vh - var(--sl-nav-height));
+    }
 
-tbody tr:hover {
-  background-color: var(--sl-color-gray-6);
-}
-
-tbody td {
-  @apply px-5 py-4 text-sm border-b align-middle;
-  color: var(--sl-color-gray-2);
-  border-color: var(--sl-color-gray-5);
-}
-
-tbody tr:last-child td {
-  @apply border-b-0;
+    [data-has-sidebar][data-has-toc] .right-sidebar-panel .sl-container {
+        width: 100%;
+    }
 }
