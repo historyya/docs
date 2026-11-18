@@ -1,6 +1,8 @@
 import { defineConfig, passthroughImageService } from "astro/config";
 import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
+import starlightScrollToTop from "starlight-scroll-to-top";
+import starlightImageZoom from "starlight-image-zoom";
 
 // https://astro.build/config
 export default defineConfig({
@@ -171,6 +173,15 @@ export default defineConfig({
             expressiveCode: {
                 styleOverrides: { borderRadius: "0.5rem" },
             },
+            plugins: [
+                starlightScrollToTop({
+                    svgPath:
+                        "M12 4L8 10H10V14H14V10H16L12 4M9 14C9 16 10 18 12 18C14 18 15 16 15 14",
+                    showProgressRing: true,
+                    showTooltip: true,
+                }),
+                starlightImageZoom(),
+            ],
         }),
     ],
     vite: {
