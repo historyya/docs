@@ -3,13 +3,15 @@ import starlight from "@astrojs/starlight";
 import tailwindcss from "@tailwindcss/vite";
 import starlightImageZoom from "starlight-image-zoom";
 
+import mdx from "@astrojs/mdx";
+
 // https://astro.build/config
 export default defineConfig({
     site: "https://docs.qing1i.workers.dev/",
     integrations: [
         starlight({
             title: "Docs",
-            defaultLocale: 'en',
+            defaultLocale: "en",
             logo: {
                 light: "./src/assets/light-logo.svg",
                 dark: "./src/assets/dark-logo.svg",
@@ -173,6 +175,9 @@ export default defineConfig({
                 styleOverrides: { borderRadius: "0.5rem" },
             },
             plugins: [starlightImageZoom()],
+        }),
+        mdx({
+            optimize: true,
         }),
     ],
     vite: {
